@@ -3,14 +3,14 @@
 #include "weatherwidget.h"
 
 #include <QDebug>
-#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(WeatherController *weatherController, QWidget *parent) : QMainWindow(parent)
 {
     weatherWidget = new WeatherWidget;
     userInteracionWidget = new UIWidget;
     centralWidget = new QWidget;
-    layout = new QHBoxLayout;
+    layout = new QVBoxLayout;
     this->weatherController = weatherController;
 
     makeConnections();
@@ -19,8 +19,9 @@ MainWindow::MainWindow(WeatherController *weatherController, QWidget *parent) : 
 
 void MainWindow::setAppereance()
 {
-    layout->addWidget(weatherWidget);
+
     layout->addWidget(userInteracionWidget);
+    layout->addWidget(weatherWidget);
 
     setCentralWidget(centralWidget);
     centralWidget->setLayout(layout);

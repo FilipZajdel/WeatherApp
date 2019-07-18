@@ -30,7 +30,9 @@ SOURCES += \
     uiwidget.cpp \
     weatherapp.cpp \
     weathercontroller.cpp \
-    weatherlogic.cpp
+    weatherlogic.cpp \
+    texteditor.cpp \
+    textpresentation.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -38,4 +40,6 @@ HEADERS += \
     uiwidget.h \
     weatherapp.h \
     weathercontroller.h \
-    weatherlogic.h
+    weatherlogic.h \
+    texteditor.h \
+    textpresentation.h

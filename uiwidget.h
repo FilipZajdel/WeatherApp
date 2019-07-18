@@ -6,6 +6,10 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QHBoxLayout>
+#include <QStackedWidget>
+
+#include "texteditor.h"
+#include "textpresentation.h"
 
 class UIWidget : public QWidget
 {
@@ -18,12 +22,17 @@ signals:
     void queryData(QString query);
 
 private slots:
-    void clicked();
+    void newQuery(QString query);
+    void switchToTextEditor();
+    void switchToTextPresentation();
 
 private:
-    QPushButton *queryButton;
-    QLineEdit *queryLine;
+    enum WidgetState {PRESENTATION, INSERTION} widgetState;
+
     QHBoxLayout *boxLayout;
+    QStackedWidget *stackedWidget;
+    TextEditor *textEditor;
+    TextPresentation *textPresentation;
 
     void makeConnections();
     void configureWidgets();

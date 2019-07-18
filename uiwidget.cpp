@@ -4,44 +4,57 @@
 
 UIWidget::UIWidget(QWidget *parent) : QWidget(parent)
 {
-    queryLine = new QLineEdit;
-    queryButton = new QPushButton;
+    textEditor = new TextEditor(this);
+    textPresentation = new TextPresentation(this);
     boxLayout = new QHBoxLayout;
+    stackedWidget = new QStackedWidget();
 
-    boxLayout->addWidget(queryLine);
-    boxLayout->addWidget(queryButton);
+    stackedWidget->addWidget(textEditor);
+    stackedWidget->addWidget(textPresentation);
 
+    boxLayout->addWidget(stackedWidget);
     setLayout(boxLayout);
 
     configureWidgets();
     makeConnections();
+
+    widgetState = PRESENTATION;
+    stackedWidget->setCurrentWidget(textPresentation);
 }
 
 UIWidget::~UIWidget()
 {
-    delete queryLine;
-    delete queryButton;
+    delete textEditor;
+    delete textPresentation;
+    delete stackedWidget;
     delete boxLayout;
 }
 
-void UIWidget::clicked()
+void UIWidget::newQuery(QString query)
 {
-    qDebug() << "clicked" << queryLine->text();
-    emit queryData(queryLine->text());
+    qDebug() << "clicked " << query;
+    emit queryData(query);
+}
+
+void UIWidget::switchToTextEditor()
+{
+    stackedWidget->setCurrentWidget(textEditor);
+}
+
+void UIWidget::switchToTextPresentation()
+{
+    stackedWidget->setCurrentWidget(textPresentation);
 }
 
 void UIWidget::makeConnections()
 {
-    connect(queryButton, &QPushButton::clicked, this, &UIWidget::clicked);
+    connect(textEditor, &TextEditor::textInserted, this, &UIWidget::newQuery);
+    connect(textEditor, &TextEditor::textInserted, textPresentation, &TextPresentation::updateText);
+    connect(textPresentation, &TextPresentation::mousePressed, this, &UIWidget::switchToTextEditor);
+    connect(textEditor, &TextEditor::textInserted, this, &UIWidget::switchToTextPresentation);
+    connect(textEditor, &TextEditor::insertCancelled, this, &UIWidget::switchToTextPresentation);
 }
 
 void UIWidget::configureWidgets()
 {
-    if(queryLine){
-        queryLine->setText("City");
-    }
-
-    if(queryButton){
-        queryButton->setText("Get");
-    }
 }
