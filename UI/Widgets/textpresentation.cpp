@@ -28,8 +28,9 @@ void TextPresentation::updateText(QString text)
 
 void TextPresentation::configureLabel()
 {
-    QFont font("Times", 12, QFont::Bold);
+    QFont font("Helvetica", 20, QFont::Light);
     label->setFont(font);
     label->setText("Click me!");
+    label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 }
 

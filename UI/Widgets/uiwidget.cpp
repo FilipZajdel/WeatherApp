@@ -1,4 +1,5 @@
 #include "uiwidget.h"
+#include <QVBoxLayout>
 #include <QDebug>
 
 
@@ -6,14 +7,14 @@ UIWidget::UIWidget(QWidget *parent) : QWidget(parent)
 {
     textEditor = new TextEditor(this);
     textPresentation = new TextPresentation(this);
-    boxLayout = new QHBoxLayout;
+    layout = new QVBoxLayout;
     stackedWidget = new QStackedWidget();
 
     stackedWidget->addWidget(textEditor);
     stackedWidget->addWidget(textPresentation);
 
-    boxLayout->addWidget(stackedWidget);
-    setLayout(boxLayout);
+    layout->addWidget(stackedWidget);
+    setLayout(layout);
 
     configureWidgets();
     makeConnections();
@@ -27,7 +28,7 @@ UIWidget::~UIWidget()
     delete textEditor;
     delete textPresentation;
     delete stackedWidget;
-    delete boxLayout;
+    delete layout;
 }
 
 void UIWidget::newQuery(QString query)
@@ -57,4 +58,5 @@ void UIWidget::makeConnections()
 
 void UIWidget::configureWidgets()
 {
+    layout->setAlignment(stackedWidget, Qt::AlignCenter);
 }

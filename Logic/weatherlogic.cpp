@@ -8,7 +8,7 @@
 #include <QJsonValue>
 #include <QFile>
 
-//#define GET_NEW_DATA
+#define GET_NEW_DATA
 
 WeatherLogic::WeatherLogic(QObject *parent) : QObject(parent)
 {
@@ -66,7 +66,7 @@ WeatherInfo WeatherLogic::getWeatherInfoFromFile()
 
 void WeatherLogic::getWindSpeedFromJson(QJsonObject jsonObject, WeatherInfo &weatherInfo)
 {
-   weatherInfo.windSpeed = QString::number(jsonObject.value("speed").toDouble());
+   weatherInfo.windSpeed = QString::number(jsonObject.value("speed").toDouble()) + "m/s";
 }
 
 void WeatherLogic::getMainFromJson(QJsonObject jsonObject, WeatherInfo &weatherInfo)
@@ -74,10 +74,13 @@ void WeatherLogic::getMainFromJson(QJsonObject jsonObject, WeatherInfo &weatherI
     foreach(const QString& jsonKey, jsonObject.keys()){
         if("temp" == jsonKey){
             weatherInfo.temperature = QString::number(jsonObject.value(jsonKey).toDouble());
+            weatherInfo.temperature += " *C";
         } else if ("pressure" == jsonKey) {
             weatherInfo.pressure = QString::number(jsonObject.value(jsonKey).toDouble());
+            weatherInfo.pressure += " hPa";
         } else if ("humidity" == jsonKey) {
             weatherInfo.humidity = QString::number(jsonObject.value(jsonKey).toDouble());
+            weatherInfo.humidity += " %";
         }
     }
 }

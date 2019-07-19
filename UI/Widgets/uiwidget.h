@@ -3,9 +3,7 @@
 
 #include <QWidget>
 #include <QString>
-#include <QPushButton>
-#include <QLineEdit>
-#include <QHBoxLayout>
+#include <QLayout>
 #include <QStackedWidget>
 
 #include "texteditor.h"
@@ -29,7 +27,7 @@ private slots:
 private:
     enum WidgetState {PRESENTATION, INSERTION} widgetState;
 
-    QHBoxLayout *boxLayout;
+    QLayout *layout;
     QStackedWidget *stackedWidget;
     TextEditor *textEditor;
     TextPresentation *textPresentation;

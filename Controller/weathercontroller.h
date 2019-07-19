@@ -1,7 +1,7 @@
 #ifndef WEATHERCONTROLLER_H
 #define WEATHERCONTROLLER_H
 
-#include "weatherlogic.h"
+#include "../Logic/weatherlogic.h"
 
 #include <QObject>
 #include <QString>

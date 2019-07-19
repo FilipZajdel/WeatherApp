@@ -1,6 +1,5 @@
-#include "mainwindow.h"
+#include "../UI/mainwindow.h"
 #include "weatherapp.h"
-#include "uiwidget.h"
 
 WeatherApp::WeatherApp(QObject *parent) : QObject(parent)
 {

@@ -9,7 +9,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-#include "weatherlogic.h"
+#include "../../Logic/weatherlogic.h"
 
 class WeatherWidget : public QWidget
 {

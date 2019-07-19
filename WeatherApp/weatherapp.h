@@ -1,8 +1,8 @@
 #ifndef WEATHERAPP_H
 #define WEATHERAPP_H
 
-#include "weatherlogic.h"
-#include "weathercontroller.h"
+#include "../Logic/weatherlogic.h"
+#include "../Controller/weathercontroller.h"
 
 #include <QObject>
 #include <QMainWindow>

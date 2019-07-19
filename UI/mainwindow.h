@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "weathercontroller.h"
+#include "../Controller/weathercontroller.h"
 
 #include <QMainWindow>
 #include <QLayout>

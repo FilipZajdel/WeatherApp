@@ -22,24 +22,48 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+# Source File Directories
+MYUI_DIR = UI
+WIDGETS_DIR = $(MYUI_DIR)/Widgets
+LOGIC_DIR = Logic
+CONTROLLER_DIR = Controller
 
-SOURCES += \
-        main.cpp \
-    mainwindow.cpp \
-    weatherwidget.cpp \
-    uiwidget.cpp \
-    weatherapp.cpp \
-    weathercontroller.cpp \
-    weatherlogic.cpp \
-    texteditor.cpp \
-    textpresentation.cpp
+# Source Files
+CONTROLLER_SRC = $(CONTROLLER_DIR)/*.cpp
+LOGIC_SRC = $(LOGIC_DIR)/*.cpp
+UI_SRC = $(MYUI_DIR)/*.cpp
+WIDGETS_SRC = $(WIDGETS_DIR)/*.cpp
+
+# Headers
+CONTROLLER_HDR = $(CONTROLLER_DIR)/*.h
+LOGIC_HDR = $(LOGIC_DIR)/*.h
+UI_HDR = $(MYUI_DIR)/*.h
+WIDGETS_HDR = $(WIDGETS_DIR)/*.h
+
+SOURCES +=\
+    Controller/weathercontroller.cpp \
+    Logic/weatherlogic.cpp \
+    UI/Widgets/texteditor.cpp \
+    UI/Widgets/textpresentation.cpp \
+    UI/Widgets/uiwidget.cpp \
+    UI/Widgets/weatherwidget.cpp \
+    UI/mainwindow.cpp \
+    WeatherApp/weatherapp.cpp \
+    main.cpp \
+    UI/Widgets/flyingbox.cpp \
+    UI/Widgets/weatherspec.cpp
 
 HEADERS += \
-    mainwindow.h \
-    weatherwidget.h \
-    uiwidget.h \
-    weatherapp.h \
-    weathercontroller.h \
-    weatherlogic.h \
-    texteditor.h \
-    textpresentation.h
+    Controller/weathercontroller.h \
+    Logic/weatherlogic.h \
+    UI/Widgets/texteditor.h \
+    UI/Widgets/textpresentation.h \
+    UI/Widgets/uiwidget.h \
+    UI/Widgets/weatherwidget.h \
+    UI/mainwindow.h \
+    WeatherApp/weatherapp.h \
+    UI/Widgets/flyingbox.h \
+    UI/Widgets/weatherspec.h
+
+DISTFILES += \
+    UI/Rsc/Layouts/MainWindowLayout.json

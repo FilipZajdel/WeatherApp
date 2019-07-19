@@ -5,7 +5,7 @@ TextEditor::TextEditor(QWidget *parent) : QWidget(parent)
 {
     lineEdit = new QLineEdit(this);
     configureLineEdit();
-    currentQuery = "";
+    currentQuery = "Your City";
 }
 
 void TextEditor::keyPressEvent(QKeyEvent *event)
@@ -26,6 +26,7 @@ void TextEditor::configureLineEdit()
 {
     // TODO: load initial values from file
     lineEdit->setText("Your City");
+    lineEdit->setStyleSheet("background-color:rgba(0,0,0,0)");
 }
 
 void TextEditor::onEscKey()
