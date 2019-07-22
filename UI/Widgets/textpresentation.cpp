@@ -28,9 +28,9 @@ void TextPresentation::updateText(QString text)
 
 void TextPresentation::configureLabel()
 {
-    QFont font("Helvetica", 20, QFont::Light);
+    QFont font("Helvetica", 20, QFont::Light); // TODO: fix these disgusting hardcoded stuff
     label->setFont(font);
-    label->setText("Click me!");
+    label->setText("Insert city name");
     label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 }
 

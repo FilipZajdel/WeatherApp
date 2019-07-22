@@ -18,4 +18,6 @@ void WeatherController::queryData(QString query)
 void WeatherController::logicDataUpdated(WeatherInfo data)
 {
    emit weatherUpdated(data);
+    emit briefInfoUpdated(data.iconCode, data.temperature, data.description);
 }
+

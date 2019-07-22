@@ -51,7 +51,8 @@ SOURCES +=\
     WeatherApp/weatherapp.cpp \
     main.cpp \
     UI/Widgets/flyingbox.cpp \
-    UI/Widgets/weatherspec.cpp
+    UI/Widgets/weatherspec.cpp \
+    UI/Widgets/briefwidget.cpp
 
 HEADERS += \
     Controller/weathercontroller.h \
@@ -63,7 +64,11 @@ HEADERS += \
     UI/mainwindow.h \
     WeatherApp/weatherapp.h \
     UI/Widgets/flyingbox.h \
-    UI/Widgets/weatherspec.h
+    UI/Widgets/weatherspec.h \
+    UI/Widgets/briefwidget.h
 
 DISTFILES += \
     UI/Rsc/Layouts/MainWindowLayout.json
+
+RESOURCES += \
+    UI/Rsc/hovering-icons.qrc

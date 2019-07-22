@@ -1,9 +1,9 @@
 #include "weatherspec.h"
 
-const QString pressureIcon = "/home/filip/widgets/UI/Rsc/Icons/test_icon";
-const QString humidityIcon = "/home/filip/widgets/UI/Rsc/Icons/test_icon";
-const QString windSpeedIcon = "/home/filip/widgets/UI/Rsc/Icons/test_icon";
-const QString cloudinessIcon = "/home/filip/widgets/UI/Rsc/Icons/test_icon";
+const QString pressureIcon = ":/Icons/pressure_icon";
+const QString humidityIcon = ":/Icons/humidity_icon";
+const QString windSpeedIcon = ":/Icons/wind_icon";
+const QString cloudinessIcon = ":/Icons/cloudiness_icon";
 
 
 WeatherSpec::WeatherSpec(QWidget *parent) : QWidget(parent)

@@ -11,11 +11,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     explicit MainWindow(WeatherController *weatherController, QWidget *parent = nullptr);
+    virtual ~MainWindow();
 
 private:
     QWidget *userInteracionWidget;
     QWidget *weatherWidget;
     QWidget *centralWidget;
+    QWidget *briefWidget;
     QLayout *layout;
     WeatherController *weatherController;
 

@@ -1,7 +1,11 @@
 #include "flyingbox.h"
 #include <QPixmap>
 
+#include <QSize>
 #include <QDebug>
+
+const int iconWidth = 100; // TODO: fix these disgusting consts
+const int iconHeight = 100;
 
 FlyingBox::FlyingBox(QWidget *parent) : QWidget(parent)
 {
@@ -68,9 +72,9 @@ void FlyingBox::initAnimationUp()
 {
     iconFlyingUp->setTargetObject(icon);
     iconFlyingUp->setPropertyName("geometry");
-    iconFlyingUp->setDuration(500);
+    iconFlyingUp->setDuration(200);
     iconFlyingUp->setStartValue(QRect(25, 100, 100, 100));
-    iconFlyingUp->setEndValue(QRect(25, 0, 100, 100));
+    iconFlyingUp->setEndValue(QRect(25, 50, 100, 100));
 }
 
 void FlyingBox::initAnimationDown()
@@ -78,7 +82,7 @@ void FlyingBox::initAnimationDown()
     iconFlyingDown->setTargetObject(icon);
     iconFlyingDown->setPropertyName("geometry");
     iconFlyingDown->setDuration(500);
-    iconFlyingDown->setStartValue(QRect(25, 0, 100, 100));
+    iconFlyingDown->setStartValue(QRect(25, 50, 100, 100));
     iconFlyingDown->setEndValue(QRect(25, 100, 100, 100));
 }
 
@@ -86,7 +90,7 @@ void FlyingBox::initAnimationFadeOut()
 {
     fadeOutHiddenText->setTargetObject(fadeEffect);
     fadeOutHiddenText->setPropertyName("opacity");
-    fadeOutHiddenText->setDuration(500);
+    fadeOutHiddenText->setDuration(300);
     fadeOutHiddenText->setStartValue(1);
     fadeOutHiddenText->setEndValue(0);
 }
@@ -95,7 +99,7 @@ void FlyingBox::initAnimationFadeIn()
 {
     fadeInHiddenText->setTargetObject(fadeEffect);
     fadeInHiddenText->setPropertyName("opacity");
-    fadeInHiddenText->setDuration(500);
+    fadeInHiddenText->setDuration(1000);
     fadeInHiddenText->setStartValue(0);
     fadeInHiddenText->setEndValue(1);
 }
@@ -123,6 +127,8 @@ void FlyingBox::configureWidgets()
     layout->addWidget(icon);
     layout->addWidget(hiddenText);
     layout->setAlignment(hiddenText, Qt::AlignCenter);
+//    QSize qize (iconHeight, iconWidth);
+//    icon->setFixedSize(iconHeight, iconWidth);
 }
 
 QSize FlyingBox::sizeHint() const {

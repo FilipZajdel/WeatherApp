@@ -24,5 +24,6 @@ void WeatherApp::run()
 void WeatherApp::makeConnections()
 {
    connect(weatherLogic, SIGNAL(weatherUpdated(WeatherInfo)), weatherController, SLOT(logicDataUpdated(WeatherInfo)));
+   connect(weatherLogic, SIGNAL(invalidQuery()), weatherController, SIGNAL(invalidQuery()));
 }
 

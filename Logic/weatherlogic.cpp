@@ -7,12 +7,14 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QFile>
+#include <QFileInfo>
 
 #define GET_NEW_DATA
 
 WeatherLogic::WeatherLogic(QObject *parent) : QObject(parent)
 {
     configurePaths();
+    makeConnections();
 }
 
 void WeatherLogic::queryData(QString queryCity)
@@ -20,8 +22,24 @@ void WeatherLogic::queryData(QString queryCity)
 #ifdef GET_NEW_DATA
     getWeatherToFile(queryCity);
 #endif
-    WeatherInfo weatherInfo = getWeatherInfoFromFile();
-    qDebug() << "Temperature " << weatherInfo.temperature;
+}
+
+void WeatherLogic::queryFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    Q_UNUSED(exitCode);
+    Q_UNUSED(exitStatus);
+    qDebug() << "Query Finished";
+
+    if(!dataFileExists()){
+        emit LogicIOError();
+        return;
+    }
+
+    if(!fileValid()){
+        emit invalidQuery();
+        return;
+    }
+
     emit weatherUpdated(getWeatherInfoFromFile());
 }
 
@@ -35,17 +53,48 @@ void WeatherLogic::configurePaths()
     scriptParams << "--city";
 }
 
+void WeatherLogic::makeConnections()
+{
+    connect(&pythonProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(queryFinished(int, QProcess::ExitStatus)));
+}
+
 void WeatherLogic::getWeatherToFile(QString city)
 {
-    QProcess pythonProcess;
+    latestQuery = city;
     QStringList params{gettingWeatherScript};
 
     params << scriptParams;
     params << city;
 
-    pythonProcess.startDetached("python3", params);
-    pythonProcess.waitForFinished();
-    pythonProcess.close();
+    pythonProcess.start("python3", params);
+}
+
+QString WeatherLogic::KelvinsToCelsius(QString tempKelvin)
+{
+    double temperature = tempKelvin.toDouble() - 273;
+    return QString::number(temperature);
+}
+
+bool WeatherLogic::dataFileExists()
+{
+    QFileInfo fileToCheck(weatherFilePath+"/"+weatherFileName);
+    return fileToCheck.exists() && fileToCheck.isFile();
+}
+
+bool WeatherLogic::fileValid()
+{
+    // performs check if file contains proper query name,for the sake of simplicity, name of the city
+    QFile weatherFile(weatherFilePath+"/"+weatherFileName);
+    weatherFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString weatherDataJson = weatherFile.readAll();
+    weatherFile.close();
+
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(weatherDataJson.toUtf8());
+    QJsonObject jsonObject = jsonDocument.object();
+    QString savedCity = jsonObject.value("name").toString();
+
+    qDebug() << "city name from file: " << jsonObject.value("name").toString();
+    return latestQuery == savedCity;
 }
 
 WeatherInfo WeatherLogic::getWeatherInfoFromFile()
@@ -73,8 +122,8 @@ void WeatherLogic::getMainFromJson(QJsonObject jsonObject, WeatherInfo &weatherI
 {
     foreach(const QString& jsonKey, jsonObject.keys()){
         if("temp" == jsonKey){
-            weatherInfo.temperature = QString::number(jsonObject.value(jsonKey).toDouble());
-            weatherInfo.temperature += " *C";
+            weatherInfo.temperature = KelvinsToCelsius(QString::number(jsonObject.value(jsonKey).toDouble()));
+            weatherInfo.temperature += "\u00B0 C";
         } else if ("pressure" == jsonKey) {
             weatherInfo.pressure = QString::number(jsonObject.value(jsonKey).toDouble());
             weatherInfo.pressure += " hPa";
@@ -93,10 +142,10 @@ void WeatherLogic::getWeatherFromJson(QJsonArray jsonArray, WeatherInfo &weather
 
         if("main" == jsonKey){
             weatherInfo.description = jsonObject.value(jsonKey).toString();
-//            qDebug() << "main(description)" << jsonObject.value(jsonKey).toString();
         } else if ("description" == jsonKey) {
-//            qDebug() << "descripion(cloudDescription)" << jsonObject.value(jsonKey).toString();
             weatherInfo.cloudDescription = jsonObject.value(jsonKey).toString();
+        } else if ("icon" == jsonKey) {
+            weatherInfo.iconCode = jsonObject.value(jsonKey).toString();
         }
     }
 }

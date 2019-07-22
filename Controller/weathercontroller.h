@@ -14,6 +14,8 @@ public:
 
 signals:
     void weatherUpdated(WeatherInfo weatherInfo);
+    void briefInfoUpdated(QString iconCode, QString temperature, QString description);
+    void invalidQuery();
 
 public slots:
     void queryData(QString query);
