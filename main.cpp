@@ -1,8 +1,10 @@
 #include <QApplication>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include "WeatherApp/weatherapp.h"
 
-
-int main(int argc, char *argv[])
+int _main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
@@ -10,6 +12,20 @@ int main(int argc, char *argv[])
     weatherApp.run();
 
     return a.exec();
+}
+
+int main(int argc, char *argv[]){
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine qmlEngine;
+    qmlEngine.addImportPath("qrc:/");
+
+    qmlEngine.load(QUrl(QStringLiteral("qrc:/Views/MainView.qml")));
+    if(qmlEngine.rootObjects().isEmpty()) {
+        return -1;
+    }
+
+    return app.exec();
 }
 
 

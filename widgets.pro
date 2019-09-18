@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui qml quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -71,4 +71,6 @@ DISTFILES += \
     UI/Rsc/Layouts/MainWindowLayout.json
 
 RESOURCES += \
-    UI/Rsc/hovering-icons.qrc
+    UI/Rsc/hovering-icons.qrc \
+    UI/Rsc/views.qrc \
+    UI/Rsc/components.qrc
