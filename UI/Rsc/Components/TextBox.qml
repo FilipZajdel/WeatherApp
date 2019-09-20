@@ -2,14 +2,15 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 
 Item {
-    width: 640
-    height: 240
+    id: textBox
     signal textEntered()
+    property int fontSize: 22
+    property string backgroundColor: "#fefefe"
 
     Rectangle {
         id: rectangle
         anchors.fill: parent
-        color: "lightgray"
+        color: textBox.backgroundColor
 
         StackView {
             id: stackView
@@ -22,6 +23,10 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 text: "Your City"
+                font.pixelSize: textBox.fontSize
+                selectByMouse: true
+                selectedTextColor: "black"
+                selectionColor: "gray"
 
                 onEditingFinished: {
                     stackView.replace(mouseArea)
@@ -43,6 +48,7 @@ Item {
                     id: textField
                     anchors.fill: parent
                     text: textInput.text
+                    font.pixelSize: textBox.fontSize
                 }
             }
         }

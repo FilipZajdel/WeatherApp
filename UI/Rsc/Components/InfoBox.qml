@@ -4,26 +4,19 @@ import QtQuick.Controls 2.2
 Rectangle {
     property string mainText: ""
     property string secondaryText: ""
-
+    property string backgroundColor: "#fefefe"
     id: rect
-    width: 640
-    height: 240
+    color: backgroundColor
 
     Row {
         height: parent.height
         width: parent.width
-        anchors.centerIn: parent
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-            top: parent.top
-        }
 
         Rectangle {
             id: imageWrapper
             width: parent.width/2
             height: parent.height
+            color: rect.color
 
             Image {
                 source: "qrc:/Icons/greetings_view_image"
@@ -42,8 +35,9 @@ Rectangle {
                 id: mainText_
 
                 text: rect.mainText
-                width: parent.width/2
+                width: parent.width
                 height: parent.height/2
+                font.pixelSize: 25
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
@@ -54,6 +48,8 @@ Rectangle {
                 text: rect.secondaryText
                 width: parent.width
                 height: parent.height/2
+                font.pixelSize: 15
+                color: "gray"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }

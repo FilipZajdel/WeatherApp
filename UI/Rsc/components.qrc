@@ -3,5 +3,6 @@
         <file alias="qmldir">Components/qmldir</file>
         <file alias="TextBox.qml">Components/TextBox.qml</file>
         <file alias="InfoBox.qml">Components/InfoBox.qml</file>
+        <file alias="FlyingBox.qml">Components/FlyingBox.qml</file>
     </qresource>
 </RCC>
