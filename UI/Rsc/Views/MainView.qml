@@ -5,9 +5,49 @@ import Components 1.0
 Window {
     id: window
     visible: true
-    width: 480
-    height: 480
-    color: "#CCCCCC"
+    width: 320
+    height: 320
+    color: "#FEFEDD"
+    title: qsTr("Weatherpp")
+
+    Connections {
+        target: textBox
+        onTextEntered: weatherController.queryData(query)
+    }
+
+    Connections {
+        target: weatherController
+        onInvalidQuery: {
+            humidityIndicator.hiddenText = "No data"
+            pressureIndicator.hiddenText = "No data"
+            windIndicator.hiddenText = "No data"
+            cloudinessDescription.hiddenText = "No data"
+        }
+
+        onBriefInfoUpdated: {
+            infoBox.mainText = temperature
+            infoBox.secondaryText = description
+        }
+
+        onWeatherUpdated: {
+            humidityIndicator.hiddenText = weatherInfo.ui_humidity
+            pressureIndicator.hiddenText = weatherInfo.ui_pressure
+            windIndicator.hiddenText = weatherInfo.ui_windSpeed
+            cloudinessDescription.hiddenText = weatherInfo.ui_description
+        }
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        width: parent.width
+        height: parent.height
+        Image {
+            anchors.fill: parent
+            width: parent.width/2
+            height: parent.height/2
+            source: "qrc:/Icons/background_image"
+            opacity: 0.15
+        }
 
     Column {
         width: parent.width
@@ -17,16 +57,17 @@ Window {
             id: textBox
             width: parent.width
             height: parent.height/4
-            backgroundColor: window.color
+            backgroundColor: "transparent"
+            initialText: "Insert your city"
         }
 
         InfoBox {
             id: infoBox
             width: parent.width
             height: parent.height/4
-            mainText: "MainText"
-            secondaryText: "SecondaryText"
-            backgroundColor: window.color
+            mainText: ""
+            secondaryText: ""
+            backgroundColor: "transparent"
         }
 
         Row {
@@ -38,7 +79,7 @@ Window {
                 height: parent.height
                 filePath: "qrc:/Icons/pressure_icon"
                 hiddenText: "pressure"
-                backgroundColor: window.color
+                backgroundColor: "transparent"
             }
 
             FlyingBox {
@@ -47,7 +88,7 @@ Window {
                 height: parent.height
                 filePath: "qrc:/Icons/wind_icon"
                 hiddenText: "wind"
-                backgroundColor: window.color
+                backgroundColor: "transparent"
             }
         }
         Row {
@@ -59,7 +100,7 @@ Window {
                 height: parent.height
                 filePath: "qrc:/Icons/humidity_icon"
                 hiddenText: "humidity"
-                backgroundColor: window.color
+                backgroundColor: "transparent"
             }
 
             FlyingBox {
@@ -68,8 +109,9 @@ Window {
                 height: parent.height
                 filePath: "qrc:/Icons/cloudiness_icon"
                 hiddenText: "clouds"
-                backgroundColor: window.color
+                backgroundColor: "transparent"
             }
         }
+    }
     }
 }

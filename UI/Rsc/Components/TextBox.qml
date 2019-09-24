@@ -3,9 +3,10 @@ import QtQuick.Controls 2.2
 
 Item {
     id: textBox
-    signal textEntered()
+    signal textEntered(string query)
     property int fontSize: 22
     property string backgroundColor: "#fefefe"
+    property string initialText: "Text Box"
 
     Rectangle {
         id: rectangle
@@ -22,7 +23,7 @@ Item {
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: "Your City"
+                text: textBox.initialText
                 font.pixelSize: textBox.fontSize
                 selectByMouse: true
                 selectedTextColor: "black"
@@ -30,7 +31,7 @@ Item {
 
                 onEditingFinished: {
                     stackView.replace(mouseArea)
-                    textEntered()
+                    textEntered(textInput.text)
                 }
             }
 

@@ -9,7 +9,7 @@
 #include <QFile>
 #include <QFileInfo>
 
-#define GET_NEW_DATA
+//#define GET_NEW_DATA
 
 WeatherLogic::WeatherLogic(QObject *parent) : QObject(parent)
 {
@@ -21,6 +21,9 @@ void WeatherLogic::queryData(QString queryCity)
 {
 #ifdef GET_NEW_DATA
     getWeatherToFile(queryCity);
+#else
+    latestQuery = queryCity;
+    queryFinished(1,(QProcess::ExitStatus)1);
 #endif
 }
 
@@ -31,23 +34,26 @@ void WeatherLogic::queryFinished(int exitCode, QProcess::ExitStatus exitStatus)
     qDebug() << "Query Finished";
 
     if(!dataFileExists()){
+        qDebug() << "Logic IO Error";
         emit LogicIOError();
         return;
     }
 
     if(!fileValid()){
+        qDebug() << "File invalid";
         emit invalidQuery();
         return;
     }
 
-    emit weatherUpdated(getWeatherInfoFromFile());
+    WeatherInfo weatherInfo = getWeatherInfoFromFile();
+    emit weatherUpdated(weatherInfo);
 }
 
 void WeatherLogic::configurePaths()
 {
-    weatherFilePath = ".";
+    weatherFilePath = "/home/filip/Projects/weather_api";
     weatherFileName = "weather";
-    gettingWeatherScript = "/home/filip/Projects/PythonProjects/weatherApi/weather_service.py";
+    gettingWeatherScript = "/home/filip/Projects/weather_api/weather_service.py";
     scriptParams << "--path";
     scriptParams << weatherFilePath;
     scriptParams << "--city";
@@ -62,6 +68,11 @@ void WeatherLogic::getWeatherToFile(QString city)
 {
     latestQuery = city;
     QStringList params{gettingWeatherScript};
+
+    qDebug() << "Invoking script with params:";
+    for(auto param: scriptParams) {
+        qDebug() << param;
+    }
 
     params << scriptParams;
     params << city;
@@ -78,6 +89,7 @@ QString WeatherLogic::KelvinsToCelsius(QString tempKelvin)
 bool WeatherLogic::dataFileExists()
 {
     QFileInfo fileToCheck(weatherFilePath+"/"+weatherFileName);
+    qDebug() << "File path is: " << weatherFilePath + "/" +weatherFileName;
     return fileToCheck.exists() && fileToCheck.isFile();
 }
 

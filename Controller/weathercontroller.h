@@ -10,10 +10,17 @@ class WeatherController : public QObject
 {
     Q_OBJECT
 public:
-    explicit WeatherController(WeatherLogic *weatherLogic);
+    explicit WeatherController(WeatherLogic *weatherLogic=nullptr, QObject *parent=nullptr);
+    void setLogic(WeatherLogic *logic);
+
+    Q_PROPERTY(QString message READ message)
+    QString message() {
+        return "HELLO THERE";
+    }
 
 signals:
     void weatherUpdated(WeatherInfo weatherInfo);
+    void weatherUpdated(WeatherInfo *weatherInfo);
     void briefInfoUpdated(QString iconCode, QString temperature, QString description);
     void invalidQuery();
 
