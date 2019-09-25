@@ -67,7 +67,7 @@ Window {
             width: parent.width
             height: parent.height/4
             mainText: "Hello!"
-            secondaryText: "What's the weather in your city?"
+            secondaryText: "What's the weather?"
             backgroundColor: "transparent"
         }
 

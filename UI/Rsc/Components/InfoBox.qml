@@ -145,7 +145,7 @@ Rectangle {
                 text: rect.mainText
                 width: parent.width
                 height: parent.height/2
-                font.pixelSize: 30
+                font.pixelSize: 32
                 font.weight: Font.Thin
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -157,7 +157,7 @@ Rectangle {
                 text: rect.secondaryText
                 width: parent.width
                 height: parent.height/2
-                font.pixelSize: 25
+                font.pixelSize: 28
                 font.weight: Font.Thin
                 color: "gray"
                 wrapMode: Text.WordWrap

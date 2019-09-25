@@ -162,7 +162,7 @@ void WeatherLogic::getMainFromJson(QJsonObject jsonObject, WeatherInfo &weatherI
     foreach(const QString& jsonKey, jsonObject.keys()){
         if("temp" == jsonKey){
             weatherInfo.temperature = KelvinsToCelsius(QString::number(jsonObject.value(jsonKey).toDouble()));
-            weatherInfo.temperature += "\u00B0 C";
+            weatherInfo.temperature += " \u00B0C";
         } else if ("pressure" == jsonKey) {
             weatherInfo.pressure = QString::number(jsonObject.value(jsonKey).toDouble());
             weatherInfo.pressure += " hPa";

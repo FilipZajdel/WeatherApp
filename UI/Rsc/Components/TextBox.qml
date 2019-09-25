@@ -4,7 +4,7 @@ import QtQuick.Controls 2.2
 Item {
     id: textBox
     signal textEntered(string query)
-    property int fontSize: 45
+    property int fontSize: 55
     property string backgroundColor: "#fefefe"
 
     Rectangle {
