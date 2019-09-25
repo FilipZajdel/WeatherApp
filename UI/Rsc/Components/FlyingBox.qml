@@ -22,9 +22,11 @@ Item {
             anchors.fill: parent
             text: flyingBox.hiddenText
             font.pixelSize: 10
+            font.weight: Font.Thin
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             opacity: 0
+            wrapMode: Text.WordWrap
         }
 
         Image {

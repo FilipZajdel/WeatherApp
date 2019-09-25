@@ -8,8 +8,36 @@
 #include <QJsonValue>
 #include <QFile>
 #include <QFileInfo>
+#include <QChar>
+#include <algorithm>
 
-//#define GET_NEW_DATA
+#define GET_NEW_DATA
+
+class QueryValidator {
+    public:
+    virtual ~QueryValidator() {delete next;}
+    void addValidator(QueryValidator *validator) {
+        next = validator;
+    }
+    virtual void validate(QString &query){
+        if(next) next->validate(query);
+    }
+
+    private:
+    QueryValidator *next{nullptr};
+};
+
+class UpperCaseQueryValidator : public QueryValidator {
+    public:
+    void validate(QString &query) override {
+        query[0] = query[0].toUpper();
+        std::for_each(query.begin()+1, query.end(), [](QChar &c) {
+            c = c.toLower();
+        });
+
+        QueryValidator::validate(query);
+    }
+};
 
 WeatherLogic::WeatherLogic(QObject *parent) : QObject(parent)
 {
@@ -19,6 +47,9 @@ WeatherLogic::WeatherLogic(QObject *parent) : QObject(parent)
 
 void WeatherLogic::queryData(QString queryCity)
 {
+    QueryValidator queryValidator;
+    queryValidator.addValidator(new UpperCaseQueryValidator);
+    queryValidator.validate(queryCity);
 #ifdef GET_NEW_DATA
     getWeatherToFile(queryCity);
 #else
@@ -47,17 +78,14 @@ void WeatherLogic::queryFinished(int exitCode, QProcess::ExitStatus exitStatus)
 
     qDebug() << "emit weatherUpdated";
     WeatherInfo weatherInfo = getWeatherInfoFromFile();
-//    QVariantList vList;
-//    vList.append((WeatherInfo)weatherInfo);
     emit weatherUpdated(weatherInfo);
-//    emit weatherUpdated(vList);
 }
 
 void WeatherLogic::configurePaths()
 {
     weatherFilePath = ".";
     weatherFileName = "weather";
-    gettingWeatherScript = "/home/filip/Projects/PythonProjects/weatherApi/weather_service.py";
+    gettingWeatherScript = "/home/filip/Projects/weather_api/weather_service.py";
     scriptParams << "--path";
     scriptParams << weatherFilePath;
     scriptParams << "--city";

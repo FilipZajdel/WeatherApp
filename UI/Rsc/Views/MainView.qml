@@ -6,7 +6,7 @@ Window {
     id: window
     visible: true
     width: 320
-    height: 480
+    height: 440
     title: "Weatherpp"
 
     Rectangle {
@@ -25,21 +25,30 @@ Window {
     Connections {
         target: weatherController
         onWeatherUpdated: {
-            pressureIndicator.updateHiddenText(weatherInfo.ui_pressure)
-            windIndicator.updateHiddenText(weatherInfo.ui_windSpeed)
-            humidityIndicator.updateHiddenText(weatherInfo.ui_humidity)
-            cloudinessDescription.updateHiddenText(weatherInfo.ui_cloudDescription)
+            pressureIndicator.updateHiddenText(weatherController.ui_weatherInfo.ui_pressure)
+            windIndicator.updateHiddenText(weatherController.ui_weatherInfo.ui_windSpeed)
+            humidityIndicator.updateHiddenText(weatherController.ui_weatherInfo.ui_humidity)
+            cloudinessDescription.updateHiddenText(weatherController.ui_weatherInfo.ui_cloudDescription)
         }
         onBriefInfoUpdated: {
             infoBox.onValidQuery(temperature, description, "qrc:/Icons/"+iconCode)
         }
 
-        onInvalidQuery: infoBox.onInvalidQuery("fucked up")
+        onInvalidQuery: {
+            infoBox.onInvalidQuery("I'm Sorry")
+            pressureIndicator.updateHiddenText("pressure")
+            windIndicator.updateHiddenText("wind speed")
+            humidityIndicator.updateHiddenText("humidity")
+            cloudinessDescription.updateHiddenText("clouds")
+        }
     }
 
     Connections {
         target: textBox
-        onTextEntered: weatherController.queryData(query)
+        onTextEntered: { 
+            weatherController.queryData(query)
+            console.log("Text entered")
+        }
     }
 
     Column {
@@ -58,7 +67,7 @@ Window {
             width: parent.width
             height: parent.height/4
             mainText: "Hello!"
-            secondaryText: ""
+            secondaryText: "What's the weather in your city?"
             backgroundColor: "transparent"
         }
 

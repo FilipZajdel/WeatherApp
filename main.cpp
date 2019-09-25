@@ -7,16 +7,6 @@
 #include "Logic/weatherlogic.h"
 #include "Controller/weathercontroller.h"
 
-int _main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-
-    WeatherApp weatherApp;
-    weatherApp.run();
-
-    return a.exec();
-}
-
 int main(int argc, char *argv[]){
     QGuiApplication app(argc, argv);
 
@@ -25,6 +15,7 @@ int main(int argc, char *argv[]){
     WeatherLogic weatherLogic;
     WeatherController weatherController;
     weatherController.setLogic(&weatherLogic);
+    
     QObject::connect(&weatherLogic, &WeatherLogic::weatherUpdated, &weatherController, &WeatherController::logicDataUpdated);
     QObject::connect(&weatherLogic, &WeatherLogic::invalidQuery, &weatherController, &WeatherController::invalidQuery);
 

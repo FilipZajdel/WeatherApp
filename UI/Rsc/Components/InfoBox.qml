@@ -42,13 +42,14 @@ Rectangle {
     function onInvalidQuery(query) {
         mainText = query
         rect.state = "invalidQuery"
+        secondaryText = "Resource is unreachable"
     }
 
     function onValidQuery(temperature, description, filepath) {
         mainText = temperature
         secondaryText = description
-        image.source = filepath
         rect.state = "validQuery"
+        image.source = filepath
     }
 
     transitions: Transition {
@@ -145,6 +146,7 @@ Rectangle {
                 width: parent.width
                 height: parent.height/2
                 font.pixelSize: 30
+                font.weight: Font.Thin
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
@@ -156,7 +158,9 @@ Rectangle {
                 width: parent.width
                 height: parent.height/2
                 font.pixelSize: 25
+                font.weight: Font.Thin
                 color: "gray"
+                wrapMode: Text.WordWrap
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }

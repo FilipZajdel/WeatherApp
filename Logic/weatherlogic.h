@@ -33,6 +33,18 @@ public:
         iconCode = w.iconCode;
     }
 
+    WeatherInfo &operator=(const WeatherInfo &w)
+    {
+        temperature = w.temperature;
+        humidity = w.humidity;
+        pressure = w.pressure;
+        windSpeed = w.windSpeed;
+        description = w.description;
+        cloudDescription = w.cloudDescription;
+        iconCode = w.iconCode;
+        return *this;
+    }
+
     QString temperature;
     QString humidity;
     QString pressure;

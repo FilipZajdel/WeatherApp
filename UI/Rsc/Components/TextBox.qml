@@ -19,16 +19,18 @@ Item {
 
             TextInput {
                 id: textInput
-                anchors.fill: parent
+                width: parent.width
+                height: parent.height
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 text: "Your City"
                 font.pixelSize: textBox.fontSize
+                font.weight: Font.Thin
                 selectByMouse: true
                 selectedTextColor: "black"
                 selectionColor: "gray"
 
-                onEditingFinished: {
+                onAccepted: {
                     stackView.replace(mouseArea)
                     textEntered(textInput.text)
                 }
@@ -36,20 +38,22 @@ Item {
 
             MouseArea {
                 id: mouseArea
-                anchors.fill: parent
+                width: parent.width
+                height: parent.height
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
-                    stackView.clear()
-                    stackView.push(textInput)
+                    stackView.replace(textInput)
                 }
-                Text {
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    id: textField
-                    anchors.fill: parent
-                    text: textInput.text
-                    font.pixelSize: textBox.fontSize
-                }
+               Text {
+                   horizontalAlignment: Text.AlignHCenter
+                   verticalAlignment: Text.AlignVCenter
+                   id: textField
+                   width: parent.width
+                   height: parent.height
+                   text: textInput.text
+                   font.pixelSize: textBox.fontSize
+                   font.weight: Font.Thin
+               }
             }
         }
     }
