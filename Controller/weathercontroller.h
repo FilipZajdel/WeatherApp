@@ -10,10 +10,16 @@ class WeatherController : public QObject
 {
     Q_OBJECT
 public:
+    explicit WeatherController(QObject *parent=nullptr) :
+        QObject(parent) {}
     explicit WeatherController(WeatherLogic *weatherLogic);
+    void setLogic(WeatherLogic *weatherLogic) {
+        this->weatherLogic = weatherLogic;
+    }
 
 signals:
     void weatherUpdated(WeatherInfo weatherInfo);
+    void weatherUpdated(WeatherInfo *weatherInfo);
     void briefInfoUpdated(QString iconCode, QString temperature, QString description);
     void invalidQuery();
 

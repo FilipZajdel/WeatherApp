@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 
 Item {
     id: textBox
-    signal textEntered()
+    signal textEntered(string query)
     property int fontSize: 22
     property string backgroundColor: "#fefefe"
 
@@ -30,7 +30,7 @@ Item {
 
                 onEditingFinished: {
                     stackView.replace(mouseArea)
-                    textEntered()
+                    textEntered(textInput.text)
                 }
             }
 

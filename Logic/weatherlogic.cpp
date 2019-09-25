@@ -9,7 +9,7 @@
 #include <QFile>
 #include <QFileInfo>
 
-#define GET_NEW_DATA
+//#define GET_NEW_DATA
 
 WeatherLogic::WeatherLogic(QObject *parent) : QObject(parent)
 {
@@ -21,6 +21,9 @@ void WeatherLogic::queryData(QString queryCity)
 {
 #ifdef GET_NEW_DATA
     getWeatherToFile(queryCity);
+#else
+    latestQuery = queryCity;
+    queryFinished(0, QProcess::NormalExit);
 #endif
 }
 
@@ -32,15 +35,22 @@ void WeatherLogic::queryFinished(int exitCode, QProcess::ExitStatus exitStatus)
 
     if(!dataFileExists()){
         emit LogicIOError();
+        qDebug() << "File doesn't exist";
         return;
     }
 
     if(!fileValid()){
         emit invalidQuery();
+        qDebug() << "Invalid query";
         return;
     }
 
-    emit weatherUpdated(getWeatherInfoFromFile());
+    qDebug() << "emit weatherUpdated";
+    WeatherInfo weatherInfo = getWeatherInfoFromFile();
+//    QVariantList vList;
+//    vList.append((WeatherInfo)weatherInfo);
+    emit weatherUpdated(weatherInfo);
+//    emit weatherUpdated(vList);
 }
 
 void WeatherLogic::configurePaths()
@@ -93,7 +103,8 @@ bool WeatherLogic::fileValid()
     QJsonObject jsonObject = jsonDocument.object();
     QString savedCity = jsonObject.value("name").toString();
 
-    qDebug() << "city name from file: " << jsonObject.value("name").toString();
+    qDebug() << "city name from file: " << jsonObject.value("name").toString()
+             << "\n" << "Last Query was: " << latestQuery;
     return latestQuery == savedCity;
 }
 

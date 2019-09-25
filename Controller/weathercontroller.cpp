@@ -12,12 +12,15 @@ void WeatherController::queryData(QString query)
         weatherLogic->queryData(query);
     }
 
-    qDebug() << "query data in weather controller";
+    qDebug() << "Query: " << query << "in WeatherController::queryData";
 }
 
 void WeatherController::logicDataUpdated(WeatherInfo data)
 {
-   emit weatherUpdated(data);
+    emit weatherUpdated(data);
+    WeatherInfo *wInfo = new WeatherInfo{data, this};
+
+    emit weatherUpdated(wInfo);
     emit briefInfoUpdated(data.iconCode, data.temperature, data.description);
 }
 

@@ -7,6 +7,10 @@ Item {
     property string filePath: ""
     property string backgroundColor: "#fefefe"
 
+    function updateHiddenText(text) {
+        hiddenText = text
+    }
+
     Rectangle {
         id: wrapper
         width: parent.width

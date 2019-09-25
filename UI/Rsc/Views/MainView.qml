@@ -5,9 +5,29 @@ import Components 1.0
 Window {
     id: window
     visible: true
-    width: 480
+    width: 320
     height: 480
     color: "#CCCCCC"
+
+    Connections {
+        target: weatherController
+        onWeatherUpdated: {
+            pressureIndicator.updateHiddenText(weatherInfo.ui_pressure)
+            windIndicator.updateHiddenText(weatherInfo.ui_windSpeed)
+            humidityIndicator.updateHiddenText(weatherInfo.ui_humidity)
+            cloudinessDescription.updateHiddenText(weatherInfo.ui_cloudDescription)
+        }
+        onBriefInfoUpdated: {
+            infoBox.onValidQuery(temperature, description, "qrc:/Icons/"+iconCode)
+        }
+
+        onInvalidQuery: infoBox.onInvalidQuery("fucked up")
+    }
+
+    Connections {
+        target: textBox
+        onTextEntered: weatherController.queryData(query)
+    }
 
     Column {
         width: parent.width

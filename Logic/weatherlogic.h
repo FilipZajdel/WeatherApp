@@ -4,11 +4,34 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <QVariantList>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QProcess>
 
-struct WeatherInfo {
+struct WeatherInfo : public QObject {
+    Q_OBJECT
+public:
+    Q_PROPERTY(QString ui_temperature READ ui_temperature)
+    Q_PROPERTY(QString ui_humidity READ ui_humidity)
+    Q_PROPERTY(QString ui_pressure READ ui_pressure)
+    Q_PROPERTY(QString ui_windSpeed READ ui_windSpeed)
+    Q_PROPERTY(QString ui_description READ ui_description)
+    Q_PROPERTY(QString ui_cloudDescription READ ui_cloudDescription)
+    Q_PROPERTY(QString ui_iconCode READ ui_iconCode)
+    explicit WeatherInfo(QObject *parent=nullptr) : QObject(parent){}
+
+    WeatherInfo(const WeatherInfo &w, QObject *parent = nullptr) :
+        QObject(parent)
+    {
+        temperature = w.temperature;
+        humidity = w.humidity;
+        pressure = w.pressure;
+        windSpeed = w.windSpeed;
+        description = w.description;
+        cloudDescription = w.cloudDescription;
+        iconCode = w.iconCode;
+    }
 
     QString temperature;
     QString humidity;
@@ -17,6 +40,28 @@ struct WeatherInfo {
     QString description;
     QString cloudDescription;
     QString iconCode;
+
+    QString ui_temperature() const {
+        return temperature;
+    }
+    QString ui_humidity() const {
+        return humidity;
+    }
+    QString ui_pressure() const {
+        return pressure;
+    }
+    QString ui_description() const {
+        return description;
+    }
+    QString ui_cloudDescription() const {
+        return cloudDescription;
+    }
+    QString ui_iconCode() const {
+        return iconCode;
+    }
+    QString ui_windSpeed() const {
+        return windSpeed;
+    }
 };
 
 class WeatherLogic : public QObject
@@ -28,6 +73,7 @@ public:
 
 signals:
     void weatherUpdated(WeatherInfo weatherInfo);
+//    void weatherUpdated(QVariantList weatherInfo);
     void invalidQuery(); // TODO: emit it when necessary
     void LogicIOError();
 
