@@ -10,8 +10,6 @@ Rectangle {
     color: backgroundColor
     state: "initial"
 
-//    Component.onCompleted: onGreeting()
-
     states: [
         State {
             name: "initial"
@@ -146,7 +144,7 @@ Rectangle {
                 text: rect.mainText
                 width: parent.width
                 height: parent.height/2
-                font.pixelSize: 25
+                font.pixelSize: 30
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
@@ -157,7 +155,7 @@ Rectangle {
                 text: rect.secondaryText
                 width: parent.width
                 height: parent.height/2
-                font.pixelSize: 15
+                font.pixelSize: 25
                 color: "gray"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter

@@ -7,7 +7,20 @@ Window {
     visible: true
     width: 320
     height: 480
-    color: "#CCCCCC"
+    title: "Weatherpp"
+
+    Rectangle {
+        anchors.fill: parent
+        width: parent.width
+        height: parent.height
+        Image {
+            anchors.fill: parent
+            width: parent.width
+            height: parent.height
+            source: "qrc:/Icons/background"
+            opacity: 0.15
+        }
+    }
 
     Connections {
         target: weatherController
@@ -37,16 +50,16 @@ Window {
             id: textBox
             width: parent.width
             height: parent.height/4
-            backgroundColor: window.color
+            backgroundColor: "transparent"
         }
 
         InfoBox {
             id: infoBox
             width: parent.width
             height: parent.height/4
-            mainText: "MainText"
-            secondaryText: "SecondaryText"
-            backgroundColor: window.color
+            mainText: "Hello!"
+            secondaryText: ""
+            backgroundColor: "transparent"
         }
 
         Row {
@@ -58,7 +71,7 @@ Window {
                 height: parent.height
                 filePath: "qrc:/Icons/pressure_icon"
                 hiddenText: "pressure"
-                backgroundColor: window.color
+                backgroundColor: "transparent"
             }
 
             FlyingBox {
@@ -67,7 +80,7 @@ Window {
                 height: parent.height
                 filePath: "qrc:/Icons/wind_icon"
                 hiddenText: "wind"
-                backgroundColor: window.color
+                backgroundColor: "transparent"
             }
         }
         Row {
@@ -79,7 +92,7 @@ Window {
                 height: parent.height
                 filePath: "qrc:/Icons/humidity_icon"
                 hiddenText: "humidity"
-                backgroundColor: window.color
+                backgroundColor: "transparent"
             }
 
             FlyingBox {
@@ -88,7 +101,7 @@ Window {
                 height: parent.height
                 filePath: "qrc:/Icons/cloudiness_icon"
                 hiddenText: "clouds"
-                backgroundColor: window.color
+                backgroundColor: "transparent"
             }
         }
     }

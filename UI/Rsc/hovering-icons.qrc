@@ -28,5 +28,6 @@
 
         <file alias="invalid_view_image">Icons/invalid_view_image</file>
         <file alias="greetings_view_image">Icons/greetings_view_image</file>
+        <file alias="background">Icons/background</file>
 </qresource>
 </RCC>

@@ -43,7 +43,7 @@ Item {
             PropertyChanges {
                 target: text
                 opacity: 1
-                font.pixelSize: 22
+                font.pixelSize: 30
             }
             PropertyChanges {
                 target: image
