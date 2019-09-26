@@ -78,4 +78,5 @@ DISTFILES += \
 RESOURCES += \
     UI/Rsc/hovering-icons.qrc \
     UI/Rsc/views.qrc \
-    UI/Rsc/components.qrc
+    UI/Rsc/components.qrc \
+    Logic/Rsc/NVData.qrc 

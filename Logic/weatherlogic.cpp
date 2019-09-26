@@ -36,12 +36,26 @@ class QueryValidator {
 class UpperCaseQueryValidator : public QueryValidator {
     public:
     void validate(QString &query) override {
-        query[0] = query[0].toUpper();
-        std::for_each(query.begin()+1, query.end(), [](QChar &c) {
-            c = c.toLower();
-        });
+
+        QStringList strList = query.split(" ");
+        query.clear();
+
+        for(auto &str : strList) {
+            makeFirstCharUpper(str);
+            query += str + " ";
+        }
+        query.remove(query.size()-1, 1);
 
         QueryValidator::validate(query);
+    }
+
+    private:
+    void makeFirstCharUpper(QString &str) {
+        str[0] = str[0].toUpper();
+        std::for_each(str.begin()+1, str.end(), [](QChar &c) {
+            c = c.toLower();
+        });
+        qDebug() << __FUNCTION__ << " " << str;
     }
 };
 
@@ -52,6 +66,7 @@ class CityCodesParser {
     }
     QString findCodeForCity(QString city) {
         if(!codes.open(QIODevice::ReadOnly)) {
+            qDebug() << "File doesn't exist";
             return "";
         }
 
@@ -68,9 +83,11 @@ class CityCodesParser {
             QJsonObject obj = value.toObject();
             if(city == obj.value("name").toString()) {
                 qDebug() << "code of " << city << " is " << obj.value("id");
+                codes.close();
                 return QString::number(obj.value("id").toInt());
             }
         }
+        codes.close();
         return "";
     }
 
@@ -91,6 +108,7 @@ void WeatherLogic::queryData(QString queryCity)
     QueryValidator queryValidator;
     queryValidator.addValidator(new UpperCaseQueryValidator);
     queryValidator.validate(queryCity);
+    qDebug() << "After validation " << queryCity;
     latestQuery = queryCity;
 #ifdef GET_NEW_DATA
     getWeatherFromNetwork(queryCity);
@@ -118,10 +136,11 @@ void WeatherLogic::makeConnections()
 
 void WeatherLogic::getWeatherFromNetwork(QString city) {
 
-    static CityCodesParser cityCodeParser("city_codes.json");
+    static CityCodesParser cityCodeParser(":/city_codes");
     QString cityCode = cityCodeParser.findCodeForCity(city);
     if(cityCode == "") {
         emit invalidQuery();
+        return;
     }
 
     qDebug() << __FUNCTION__ << " city code " << cityCode;
