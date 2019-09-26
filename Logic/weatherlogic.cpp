@@ -59,23 +59,45 @@ class UpperCaseQueryValidator : public QueryValidator {
     }
 };
 
+class ApiKeyParser {
+    public:
+    QString getApiKey(QString filepath) {
+        QFile credentialsFile{filepath};
+
+        if(!credentialsFile.open(QIODevice::ReadOnly)) {
+            qDebug() << "Api key file doesn't exist";
+            return "";
+        }
+        QString key = credentialsFile.readLine();
+        credentialsFile.close();
+        qDebug() << "api key is: " << key;
+        
+        return key;
+    }
+};
+
 class CityCodesParser {
   public:
     CityCodesParser(QString codesFilepath) {
         codes.setFileName(codesFilepath);
+        if(!codes.open(QIODevice::ReadOnly)) {
+            qDebug() << "File doesn't exist";
+            return;
+        } 
+
+        while(!codes.atEnd()) {
+            content += codes.readLine();
+        }
+        codes.close();
     }
+
     QString findCodeForCity(QString city) {
+
         if(!codes.open(QIODevice::ReadOnly)) {
             qDebug() << "File doesn't exist";
             return "";
-        }
-
-        QString data;
-        while(!codes.atEnd()) {
-            data += codes.readLine();
-        }
-
-        QJsonDocument jsonDocument = QJsonDocument::fromJson(data.toUtf8());
+        } 
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(content.toUtf8());
         QJsonObject jsonObject = jsonDocument.object();
         QJsonArray jsonArray = jsonDocument.array();
 
@@ -87,12 +109,13 @@ class CityCodesParser {
                 return QString::number(obj.value("id").toInt());
             }
         }
-        codes.close();
+        
         return "";
     }
 
   private:
     QFile codes;
+    QString content;
 };
 
 WeatherLogic::WeatherLogic(QObject *parent) : QObject(parent)
@@ -137,16 +160,24 @@ void WeatherLogic::makeConnections()
 void WeatherLogic::getWeatherFromNetwork(QString city) {
 
     static CityCodesParser cityCodeParser(":/city_codes");
+    ApiKeyParser apiKeyParser;
     QString cityCode = cityCodeParser.findCodeForCity(city);
+    QString apiKey = apiKeyParser.getApiKey(":/Credentials/api_key"); 
+
     if(cityCode == "") {
         emit invalidQuery();
+        return;
+    }
+    if(apiKey == "") {
+        emit info(QString{"No Credentials"});
+        qDebug() << "Api key not found";
         return;
     }
 
     qDebug() << __FUNCTION__ << " city code " << cityCode;
     weatherService->setBaseUrl("http://api.openweathermap.org/data/2.5/weather?");
     weatherService->setQueryString(QMap<QString, QString> {
-                        std::pair<QString, QString>{"appid", "d148155d2d0b302a490a0773eb4851d2"},
+                        std::pair<QString, QString>{"appid", apiKey},
                         std::pair<QString, QString>{"id",cityCode}});
     weatherService->getWeather();
 }

@@ -13,6 +13,7 @@ WeatherController::WeatherController(WeatherLogic *weatherLogic) : WeatherContro
 void WeatherController::setLogic(WeatherLogic *weatherLogic) {
     this->weatherLogic = weatherLogic;
     connect(this, &WeatherController::getData, weatherLogic, &WeatherLogic::queryData);
+    connect(weatherLogic, &WeatherLogic::info, this, &WeatherController::userInfo);
 }
 
 void WeatherController::queryData(QString query)

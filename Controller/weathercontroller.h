@@ -21,6 +21,7 @@ signals:
     void weatherUpdated(WeatherInfo weatherInfo);
     void briefInfoUpdated(QString iconCode, QString temperature, QString description);
     void invalidQuery();
+    void userInfo(QString info);
 
     void getData(QString query);    // for communication with data provider
 

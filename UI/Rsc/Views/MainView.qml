@@ -41,6 +41,14 @@ Window {
             humidityIndicator.updateHiddenText("humidity")
             cloudinessDescription.updateHiddenText("clouds")
         }
+
+        onUserInfo: {
+            infoBox.onInvalidQuery(info)
+            pressureIndicator.updateHiddenText("pressure")
+            windIndicator.updateHiddenText("wind speed")
+            humidityIndicator.updateHiddenText("humidity")
+            cloudinessDescription.updateHiddenText("clouds")        
+        }
     }
 
     Connections {

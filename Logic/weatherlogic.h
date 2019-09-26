@@ -88,6 +88,7 @@ public:
 signals:
     void weatherUpdated(WeatherInfo weatherInfo);
     void invalidQuery();
+    void info(QString info);
 
 public slots:
     void queryData(QString queryCity);

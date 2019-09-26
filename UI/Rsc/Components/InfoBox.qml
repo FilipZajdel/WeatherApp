@@ -147,6 +147,7 @@ Rectangle {
                 height: parent.height/2
                 font.pixelSize: 32
                 font.weight: Font.Thin
+                wrapMode: Text.WordWrap
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
