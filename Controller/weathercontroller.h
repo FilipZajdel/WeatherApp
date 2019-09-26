@@ -12,18 +12,17 @@ class WeatherController : public QObject
 public:
     Q_PROPERTY(WeatherInfo* ui_weatherInfo READ ui_weatherInfo NOTIFY ui_weatherUpdated)
     
-    explicit WeatherController(QObject *parent=nullptr) :
-        QObject(parent), weatherInfo(new WeatherInfo) {}
+    explicit WeatherController(QObject *parent=nullptr);
     explicit WeatherController(WeatherLogic *weatherLogic);
-    void setLogic(WeatherLogic *weatherLogic) {
-        this->weatherLogic = weatherLogic;
-    }
+    void setLogic(WeatherLogic *weatherLogic);
 
 signals:
     void ui_weatherUpdated();
     void weatherUpdated(WeatherInfo weatherInfo);
     void briefInfoUpdated(QString iconCode, QString temperature, QString description);
     void invalidQuery();
+
+    void getData(QString query);    // for communication with data provider
 
 public slots:
     WeatherInfo *ui_weatherInfo() {

@@ -84,11 +84,13 @@ class WeatherLogic : public QObject
     Q_OBJECT
 public:
     explicit WeatherLogic(QObject *parent = nullptr);
-    void queryData(QString queryCity);
 
 signals:
     void weatherUpdated(WeatherInfo weatherInfo);
     void invalidQuery();
+
+public slots:
+    void queryData(QString queryCity);
 
 private slots:
     void onWeatherServiceReply(QString reply);

@@ -1,15 +1,25 @@
 #include "weathercontroller.h"
 #include <QDebug>
 
+WeatherController::WeatherController(QObject *parent) :
+    QObject(parent), weatherInfo(new WeatherInfo) {
+}
+
 WeatherController::WeatherController(WeatherLogic *weatherLogic) : WeatherController()
 {
-    weatherLogic = weatherLogic;
+    setLogic(weatherLogic);
+}
+
+void WeatherController::setLogic(WeatherLogic *weatherLogic) {
+    this->weatherLogic = weatherLogic;
+    connect(this, &WeatherController::getData, weatherLogic, &WeatherLogic::queryData);
 }
 
 void WeatherController::queryData(QString query)
 {
     if(query != ""){
-        weatherLogic->queryData(query);
+        qDebug() << "emitting getData";
+        emit getData(query);
     }
 
     qDebug() << "Query: " << query << "in WeatherController::queryData";
