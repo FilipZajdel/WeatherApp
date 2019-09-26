@@ -9,7 +9,13 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QChar>
+#include <QMap>
+
 #include <algorithm>
+#include <memory>
+
+#include "weatherservice.h"
+#include "htttqueryservice.h"
 
 #define GET_NEW_DATA
 
@@ -39,9 +45,44 @@ class UpperCaseQueryValidator : public QueryValidator {
     }
 };
 
+class CityCodesParser {
+  public:
+    CityCodesParser(QString codesFilepath) {
+        codes.setFileName(codesFilepath);
+    }
+    QString findCodeForCity(QString city) {
+        if(!codes.open(QIODevice::ReadOnly)) {
+            return "";
+        }
+
+        QString data;
+        while(!codes.atEnd()) {
+            data += codes.readLine();
+        }
+
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(data.toUtf8());
+        QJsonObject jsonObject = jsonDocument.object();
+        QJsonArray jsonArray = jsonDocument.array();
+
+        foreach(const QJsonValue & value, jsonArray) {
+            QJsonObject obj = value.toObject();
+            if(city == obj.value("name").toString()) {
+                qDebug() << "code of " << city << " is " << obj.value("id");
+                return QString::number(obj.value("id").toInt());
+            }
+        }
+        return "";
+    }
+
+  private:
+    QFile codes;
+};
+
 WeatherLogic::WeatherLogic(QObject *parent) : QObject(parent)
 {
-    configurePaths();
+    std::unique_ptr<HttpQueryService> httpService(new HttpQueryService{});
+    std::unique_ptr<WeatherService> weatherServ(new WeatherService{std::move(httpService)});
+    weatherService = std::move(weatherServ);
     makeConnections();
 }
 
@@ -50,61 +91,45 @@ void WeatherLogic::queryData(QString queryCity)
     QueryValidator queryValidator;
     queryValidator.addValidator(new UpperCaseQueryValidator);
     queryValidator.validate(queryCity);
-#ifdef GET_NEW_DATA
-    getWeatherToFile(queryCity);
-#else
     latestQuery = queryCity;
+#ifdef GET_NEW_DATA
+    getWeatherFromNetwork(queryCity);
+#else
     queryFinished(0, QProcess::NormalExit);
 #endif
 }
 
-void WeatherLogic::queryFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void WeatherLogic::onWeatherServiceReply(QString reply)
 {
-    Q_UNUSED(exitCode);
-    Q_UNUSED(exitStatus);
-    qDebug() << "Query Finished";
-
-    if(!dataFileExists()){
-        emit LogicIOError();
-        qDebug() << "File doesn't exist";
-        return;
-    }
-
-    if(!fileValid()){
+    if(reply == "") {
+        qDebug() << "Reply error, taking old data";
         emit invalidQuery();
-        qDebug() << "Invalid query";
         return;
     }
 
-    qDebug() << "emit weatherUpdated";
-    WeatherInfo weatherInfo = getWeatherInfoFromFile();
-    emit weatherUpdated(weatherInfo);
-}
-
-void WeatherLogic::configurePaths()
-{
-    weatherFilePath = ".";
-    weatherFileName = "weather";
-    gettingWeatherScript = "/home/filip/Projects/weather_api/weather_service.py";
-    scriptParams << "--path";
-    scriptParams << weatherFilePath;
-    scriptParams << "--city";
+    emit weatherUpdated(getWeatherInfoFromReply(reply));
 }
 
 void WeatherLogic::makeConnections()
 {
-    connect(&pythonProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(queryFinished(int, QProcess::ExitStatus)));
+    connect(weatherService.get(), &WeatherService::reply, this,
+            &WeatherLogic::onWeatherServiceReply);
 }
 
-void WeatherLogic::getWeatherToFile(QString city)
-{
-    latestQuery = city;
-    QStringList params{gettingWeatherScript};
+void WeatherLogic::getWeatherFromNetwork(QString city) {
 
-    params << scriptParams;
-    params << city;
+    static CityCodesParser cityCodeParser("city_codes.json");
+    QString cityCode = cityCodeParser.findCodeForCity(city);
+    if(cityCode == "") {
+        emit invalidQuery();
+    }
 
-    pythonProcess.start("python3", params);
+    qDebug() << __FUNCTION__ << " city code " << cityCode;
+    weatherService->setBaseUrl("http://api.openweathermap.org/data/2.5/weather?");
+    weatherService->setQueryString(QMap<QString, QString> {
+                        std::pair<QString, QString>{"appid", "d148155d2d0b302a490a0773eb4851d2"},
+                        std::pair<QString, QString>{"id",cityCode}});
+    weatherService->getWeather();
 }
 
 QString WeatherLogic::KelvinsToCelsius(QString tempKelvin)
@@ -113,37 +138,9 @@ QString WeatherLogic::KelvinsToCelsius(QString tempKelvin)
     return QString::number(temperature);
 }
 
-bool WeatherLogic::dataFileExists()
+WeatherInfo WeatherLogic::getWeatherInfoFromReply(QString reply)
 {
-    QFileInfo fileToCheck(weatherFilePath+"/"+weatherFileName);
-    return fileToCheck.exists() && fileToCheck.isFile();
-}
-
-bool WeatherLogic::fileValid()
-{
-    // performs check if file contains proper query name,for the sake of simplicity, name of the city
-    QFile weatherFile(weatherFilePath+"/"+weatherFileName);
-    weatherFile.open(QIODevice::ReadOnly | QIODevice::Text);
-    QString weatherDataJson = weatherFile.readAll();
-    weatherFile.close();
-
-    QJsonDocument jsonDocument = QJsonDocument::fromJson(weatherDataJson.toUtf8());
-    QJsonObject jsonObject = jsonDocument.object();
-    QString savedCity = jsonObject.value("name").toString();
-
-    qDebug() << "city name from file: " << jsonObject.value("name").toString()
-             << "\n" << "Last Query was: " << latestQuery;
-    return latestQuery == savedCity;
-}
-
-WeatherInfo WeatherLogic::getWeatherInfoFromFile()
-{
-    QFile weatherFile(weatherFilePath+"/"+weatherFileName);
-    weatherFile.open(QIODevice::ReadOnly | QIODevice::Text);
-    QString weatherDataJson = weatherFile.readAll();
-    weatherFile.close();
-
-    QJsonDocument jsonDocument = QJsonDocument::fromJson(weatherDataJson.toUtf8());
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(reply.toUtf8());
     QJsonObject jsonObject = jsonDocument.object();
 
     WeatherInfo weatherInfo;

@@ -52,7 +52,9 @@ SOURCES +=\
     main.cpp \
     UI/Widgets/flyingbox.cpp \
     UI/Widgets/weatherspec.cpp \
-    UI/Widgets/briefwidget.cpp
+    UI/Widgets/briefwidget.cpp \
+    Logic/weatherservice.cpp \
+    Logic/htttqueryservice.cpp
 
 HEADERS += \
     Controller/weathercontroller.h \
@@ -65,7 +67,10 @@ HEADERS += \
     WeatherApp/weatherapp.h \
     UI/Widgets/flyingbox.h \
     UI/Widgets/weatherspec.h \
-    UI/Widgets/briefwidget.h
+    UI/Widgets/briefwidget.h \
+    Logic/ihttpservice.h \
+    Logic/weatherservice.h \
+    Logic/htttqueryservice.h
 
 DISTFILES += \
     UI/Rsc/Layouts/MainWindowLayout.json

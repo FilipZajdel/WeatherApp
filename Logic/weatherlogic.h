@@ -8,6 +8,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QProcess>
+#include <memory>
+
+#include "weatherservice.h"
 
 struct WeatherInfo : public QObject {
     Q_OBJECT
@@ -85,38 +88,28 @@ public:
 
 signals:
     void weatherUpdated(WeatherInfo weatherInfo);
-//    void weatherUpdated(QVariantList weatherInfo);
-    void invalidQuery(); // TODO: emit it when necessary
-    void LogicIOError();
+    void invalidQuery();
 
 private slots:
-    void queryFinished(int, QProcess::ExitStatus);
+    void onWeatherServiceReply(QString reply);
 
 private:
-    void configurePaths();
     void makeConnections();
-    void getWeatherToFile(QString city);
+    void getWeatherFromNetwork(QString city);
     QString KelvinsToCelsius(QString tempKelvin);
-
-    // getting information from json -> to be moved to external class
-    bool dataFileExists();
-    bool fileValid();
 
     /** /brief Takes data from json file.
      *
      * In case of invalid file, emits invalidQuery() signal */
-    WeatherInfo getWeatherInfoFromFile();
+    WeatherInfo getWeatherInfoFromReply(QString reply);
     void getWindSpeedFromJson(QJsonObject jsonObject, WeatherInfo &weatherInfo);
     void getMainFromJson(QJsonObject jsonObject, WeatherInfo &weatherInfo);
     void getWeatherFromJson(QJsonArray jsonArray, WeatherInfo &weatherInfo);
     void fillWeatherInfoFromJson(QJsonObject jsonObject, WeatherInfo &weatherInfo);
 
     QString latestQuery;
-    QProcess pythonProcess;
-    QString gettingWeatherScript;
-    QStringList scriptParams;
-    QString weatherFilePath;
-    QString weatherFileName;
+    std::unique_ptr<WeatherService> weatherService;
+
 };
 
 #endif // WEATHERLOGIC_H
