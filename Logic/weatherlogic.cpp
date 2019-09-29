@@ -82,6 +82,7 @@ class CityCodesParser {
         codes.setFileName(codesFilepath);
         if(!codes.open(QIODevice::ReadOnly)) {
             qDebug() << "File doesn't exist";
+            codes.close();
             return;
         } 
 

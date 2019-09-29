@@ -5,3 +5,4 @@ qrc_*
 .qmake.stash
 Makefile
 .vscode
+Credentials/credentials 

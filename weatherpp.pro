@@ -8,7 +8,7 @@ QT       += core gui qml quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = widgets
+TARGET = weatherpp
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
