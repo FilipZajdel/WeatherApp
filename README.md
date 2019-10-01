@@ -1,5 +1,7 @@
 # Weather App
 
+![Weather App demo](.demo/demo.gif)
+
 Table of contents: <br>
 * [About](#about)
 * [Building the project](#building-the-project)
